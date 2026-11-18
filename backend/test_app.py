@@ -44,8 +44,13 @@ class PhishGuardApiTests(unittest.TestCase):
             {"name": "Test Person", "email": email, "password": "secure-pass-123"},
         )
         self.assertEqual(response.status_code, 201, response.get_json())
-        user = client.get("/api/me").get_json()
-        return user["csrf_token"]
+        login = self.json_request(
+            client,
+            "/api/login",
+            {"email": email, "password": "secure-pass-123"},
+        )
+        self.assertEqual(login.status_code, 200, login.get_json())
+        return login.get_json()["user"]["csrf_token"]
 
     def test_frontend_and_pwa_files_are_served_without_exposing_backend_sources(self):
         response = self.client.get("/")
@@ -94,6 +99,40 @@ class PhishGuardApiTests(unittest.TestCase):
             {"email": "person@example.com", "password": "incorrect"},
         )
         self.assertEqual(bad_login.status_code, 401)
+
+    def test_signup_requires_manual_login_and_logout_clears_session(self):
+        response = self.json_request(
+            self.client,
+            "/api/signup",
+            {"name": "Test Person", "email": "manual@example.com", "password": "secure-pass-123"},
+        )
+        self.assertEqual(response.status_code, 201, response.get_json())
+        self.assertEqual(
+            response.get_json()["message"],
+            "Account created successfully. Please log in.",
+        )
+        self.assertNotIn("Set-Cookie", response.headers)
+        self.assertEqual(self.client.get("/api/me").status_code, 401)
+
+        invalid_login = self.json_request(
+            self.client,
+            "/api/login",
+            {"email": "manual@example.com", "password": "incorrect"},
+        )
+        self.assertEqual(invalid_login.status_code, 401)
+        self.assertEqual(self.client.get("/api/me").status_code, 401)
+
+        login = self.json_request(
+            self.client,
+            "/api/login",
+            {"email": "manual@example.com", "password": "secure-pass-123"},
+        )
+        self.assertEqual(login.status_code, 200)
+        self.assertEqual(self.client.get("/api/me").status_code, 200)
+        csrf = login.get_json()["user"]["csrf_token"]
+        logout = self.json_request(self.client, "/api/logout", csrf=csrf)
+        self.assertEqual(logout.status_code, 200)
+        self.assertEqual(self.client.get("/api/me").status_code, 401)
 
     def test_scan_history_analytics_and_owner_scoped_crud(self):
         self.csrf = self.signup()

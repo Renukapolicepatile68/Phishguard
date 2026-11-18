@@ -267,9 +267,8 @@ def signup():
     except DB_INTEGRITY_ERRORS:
         return api_error("An account with that email already exists.", 409)
 
-    start_session(user)
-    return jsonify({"message": "Account created successfully.", "user": {
-        "name": user["name"], "email": user["email"], "csrf_token": session["csrf_token"]
+    return jsonify({"message": "Account created successfully. Please log in.", "user": {
+        "name": user["name"], "email": user["email"]
     }}), 201
 
 

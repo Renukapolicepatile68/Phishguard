@@ -1,6 +1,6 @@
 const API_URL = window.PHISHGUARD_API_URL;
 
-async function submitAuthForm(form, path, values, success) {
+async function submitAuthForm(form, path, values, options = {}) {
   const status = document.getElementById("formMessage");
   const button = form.querySelector('button[type="submit"]');
   status.textContent = "";
@@ -15,10 +15,12 @@ async function submitAuthForm(form, path, values, success) {
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Request could not be completed.");
-    status.textContent = data.message || success;
+    status.textContent = options.successMessage || data.message || "Request completed successfully.";
     status.classList.add("success-message");
-    if (success) {
-      setTimeout(() => { window.location.href = success; }, 350);
+    if (options.redirectTo) {
+      setTimeout(() => {
+        window.location.href = options.redirectTo;
+      }, options.redirectDelay || 350);
     }
   } catch (error) {
     status.textContent = error.message || "The server could not be reached. Start the Flask API and try again.";
@@ -42,7 +44,11 @@ document.getElementById("signupForm")?.addEventListener("submit", event => {
     name: document.getElementById("name").value.trim(),
     email: document.getElementById("signupEmail").value.trim(),
     password
-  }, "dashboard.html");
+  }, {
+    successMessage: "Account created successfully. Please log in.",
+    redirectTo: "index.html",
+    redirectDelay: 1500
+  });
 });
 
 document.getElementById("loginForm")?.addEventListener("submit", event => {
@@ -50,14 +56,14 @@ document.getElementById("loginForm")?.addEventListener("submit", event => {
   submitAuthForm(event.currentTarget, "/login", {
     email: document.getElementById("email").value.trim(),
     password: document.getElementById("password").value
-  }, "dashboard.html");
+  }, { redirectTo: "dashboard.html" });
 });
 
 document.getElementById("forgotForm")?.addEventListener("submit", event => {
   event.preventDefault();
   submitAuthForm(event.currentTarget, "/forgot-password", {
     email: document.getElementById("resetEmail").value.trim()
-  }, "");
+  });
 });
 
 document.getElementById("resetForm")?.addEventListener("submit", event => {
@@ -72,5 +78,5 @@ document.getElementById("resetForm")?.addEventListener("submit", event => {
   submitAuthForm(event.currentTarget, "/reset-password", {
     token: new URLSearchParams(window.location.search).get("token") || "",
     password
-  }, "index.html");
+  }, { redirectTo: "index.html" });
 });
