@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: phishguard
+    runtime: python
+    plan: free
+    buildCommand: python -m pip install -r backend/requirements.txt
+    startCommand: gunicorn --chdir backend app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: PHISHGUARD_ENV
+        value: production
+      - key: PHISHGUARD_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PhishGuard URL security analysis and scan history dashboard">
+  <meta name="theme-color" content="#080b12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PhishGuard">
+  <title>PhishGuard | URL Security Platform</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/app-icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">P</div>
+        <div><strong>PhishGuard</strong><span>URL Security Platform</span></div>
+      </div>
+
+      <nav class="nav">
+        <p class="nav-label">MAIN</p>
+        <button class="nav-item active" data-page="dashboard"><span>⌂</span> Dashboard</button>
+        <button class="nav-item" data-page="scanner"><span>⌕</span> URL Scanner</button>
+        <button class="nav-item" data-page="analytics"><span>◈</span> Analytics</button>
+        <button class="nav-item" data-page="threats"><span>◉</span> Threat Intelligence</button>
+        <button class="nav-item" data-page="history"><span>◷</span> Scan History</button>
+
+        <p class="nav-label">TOOLS</p>
+        <button class="nav-item" data-page="bulk"><span>▦</span> Bulk Scanner</button>
+        <button class="nav-item" data-page="reports"><span>▤</span> Reports</button>
+        <button class="nav-item" data-page="model"><span>⌁</span> Analysis Method</button>
+
+        <p class="nav-label">SYSTEM</p>
+        <button class="nav-item" data-page="users"><span>♙</span> Account</button>
+        <button class="nav-item" data-page="settings"><span>⚙</span> Settings</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="security-mini"><span class="status-dot"></span>
+          <div><b>Analysis available</b><small>Local URL pattern checks</small></div>
+        </div>
+        <div class="user-mini">
+            <span class="avatar profile-emblem" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                <path d="M12 3 19 6v5c0 4.7-2.8 8.2-7 10-4.2-1.8-7-5.3-7-10V6l7-3Z"></path>
+                <circle cx="12" cy="9" r="2.1"></circle>
+                <path d="M8.2 16c.7-1.8 2-2.7 3.8-2.7s3.1.9 3.8 2.7"></path>
+              </svg>
+            </span>
+          <div><b>Account</b><small>Loading profile…</small></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn mobile-only" id="menuBtn" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+        <div class="breadcrumb"><span>Security Center</span><b>/</b><strong id="pageTitle">Dashboard</strong></div>
+        <div class="top-actions">
+
+          <button class="icon-btn" title="Recent flagged scans" id="notifyBtn" aria-label="Recent flagged scans">
+            ♢<i class="notification-dot hidden" id="notificationCount"></i>
+          </button>
+
+          <button class="theme-btn" id="themeBtn">
+            ☾ <span>Dark</span>
+          </button>
+          <button class="install-btn hidden" id="installBtn" type="button">Install</button>
+
+          <button class="profile-btn" id="profileBtn" aria-label="Open profile and account settings">
+            <span class="avatar small profile-emblem" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                <path d="M12 3 19 6v5c0 4.7-2.8 8.2-7 10-4.2-1.8-7-5.3-7-10V6l7-3Z"></path>
+                <circle cx="12" cy="9" r="2.1"></circle>
+                <path d="M8.2 16c.7-1.8 2-2.7 3.8-2.7s3.1.9 3.8 2.7"></path>
+              </svg>
+            </span>
+            <span id="profileName">Account</span>
+            <span class="profile-chevron" aria-hidden="true">⌄</span>
+          </button>
+
+          <button id="logoutBtn" class="logout-btn">
+            Logout
+          </button>
+
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- DASHBOARD -->
+        <section class="page active" id="page-dashboard">
+          <div class="page-heading">
+            <div><span class="eyebrow">SECURITY OVERVIEW</span>
+              <h1>Welcome to your security center.</h1>
+              <p>Review URL analysis and monitor your saved scan activity.</p>
+            </div>
+            <button class="primary-btn" data-page-target="scanner">+ New URL Scan</button>
+          </div>
+
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-icon purple">⌕</div>
+              <div><span>Total Scans</span><strong>0</strong><small>Your saved URL scans</small></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green">✓</div>
+              <div><span>Safe</span><strong>0</strong><small>Low-risk URL patterns</small>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon orange">!</div>
+              <div><span>Phishing</span><strong>0</strong><small>Moderate-risk URL patterns</small></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon red">☠</div>
+              <div><span>Malicious</span><strong>0</strong><small>High-risk URL patterns</small></div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="panel scanner-panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Quick URL Scanner</h2>
+                  <p>Analyze a URL before visiting it.</p>
+                </div><span class="live-badge"><i></i> Pattern analysis</span>
+              </div>
+              <div class="quick-form"><input id="quickUrl" type="url" placeholder="https://example.com/login"><button
+                  class="primary-btn" id="quickScan">Analyze URL</button></div>
+              <div class="scan-features"><span>✓ URL structure</span><span>✓ Heuristic checks</span><span>✓ Risk
+                  score</span><span>✓ Explanation</span></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Threat Distribution</h2>
+                  <p>Current classification ratio</p>
+                </div><button class="text-btn" data-page-target="analytics">View analytics →</button>
+              </div>
+              <div class="donut-wrap">
+                <div class="donut">
+                  <div><strong>0%</strong><span>Safe</span></div>
+                </div>
+                <div class="legend"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid lower">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Scan Activity</h2>
+                  <p id="activityRangeLabel">URL scans over the last 7 days</p>
+                </div><select class="select-small">
+                  <option>Last 7 days</option>
+                  <option>Last 30 days</option>
+                </select>
+              </div>
+              <div class="bar-chart" id="activityChart"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Recent flagged scans</h2>
+                  <p>Latest scans with a high-risk pattern score</p>
+                </div><button class="text-btn" data-page-target="history">View all →</button>
+              </div>
+              <div class="threat-list"><p class="empty-state">No flagged URLs in your scan history.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCANNER -->
+        <section class="page" id="page-scanner">
+          <div class="page-heading">
+            <div><span class="eyebrow">URL PATTERN ANALYSIS</span>
+              <h1>URL Security Scanner</h1>
+              <p>Identify potentially deceptive URL patterns. Results are heuristic signals, not a safety guarantee.</p>
+            </div>
+          </div>
+          <div class="scanner-layout">
+            <div class="panel scanner-main">
+              <div class="scan-hero">
+                <div class="shield-large">✓</div>
+                <h2>Scan a URL</h2>
+                <p>Review URL structure, protocol, hostname, length and potentially deceptive terms.</p>
+              </div>
+              <div class="big-form"><label for="scannerUrl">URL to analyze</label>
+                <div class="input-action"><input id="scannerUrl" type="url"
+                    placeholder="https://www.example.com/account/login"><button class="primary-btn" id="scanBtn">🔍 Scan
+                    URL</button></div>
+                <div class="input-help">For safety, do not enter passwords or private credentials.</div>
+              </div>
+              <div id="scanProgress" class="progress-box hidden">
+                <div class="spinner"></div>
+                <div><b>Analyzing URL...</b>
+                  <p id="progressText">Extracting URL features</p>
+                </div><span id="progressPercent">25%</span>
+              </div>
+              <div id="scanResult" class="scan-result hidden">
+                <div class="result-top">
+                  <div><span class="eyebrow">SCAN COMPLETE</span>
+                    <h2 id="resultLabel">PHISHING</h2>
+                    <p id="resultUrl"></p>
+                  </div>
+                  <div class="score-ring" id="scoreRing"><strong id="scoreValue">87</strong><span>Risk / 100</span>
+                  </div>
+                </div>
+                <div class="result-grid">
+                  <div class="result-card"><span>Classification</span><strong
+                      id="domainRep">—</strong><small>Based on URL pattern checks</small></div>
+                  <div class="result-card"><span>Protocol</span><strong
+                      id="protocolResult">—</strong><small>Does not establish site safety</small></div>
+                </div>
+                <h3>Analysis signals</h3>
+                <div class="signal-list" id="signalList"></div>
+                <div class="recommendation"><span>⚠</span>
+                  <div><b>Security recommendation</b>
+                    <p>Do not enter credentials or download files from this URL. Verify the domain through an official
+                      source.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="side-stack">
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h2>What we check</h2>
+                    <p>Multi-layer analysis</p>
+                  </div>
+                </div>
+                <div class="check-list"><span>✓ URL length & structure</span><span>✓ Potentially deceptive terms</span><span>✓
+                    Hostname and subdomain patterns</span><span>✓ IP address detection</span><span>✓ HTTP/HTTPS protocol</span><span>✓ Pattern-based risk score</span></div>
+              </div>
+              <div class="panel">
+                <div class="panel-head">
+                  <div>
+                    <h2>Risk Levels</h2>
+                  </div>
+                </div>
+                <div class="risk-scale">
+                  <div><i class="safe-bg"></i><span>0–29</span><b>Safe</b></div>
+                  <div><i class="medium-bg"></i><span>30–59</span><b>Phishing</b></div>
+                  <div><i class="critical-bg"></i><span>60–100</span><b>Malicious</b></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section class="page" id="page-analytics">
+          <div class="page-heading">
+            <div><span class="eyebrow">SECURITY ANALYTICS</span>
+              <h1>Analytics & Trends</h1>
+              <p>Understand your URL threat landscape.</p>
+            </div><button class="secondary-btn">Export CSV</button>
+          </div>
+          <div class="stat-grid compact">
+            <div class="stat-card"><span>Flagged scans</span><strong>0%</strong><small>Your scan history</small>
+            </div>
+            <div class="stat-card"><span>Average risk</span><strong>0</strong><small>Score out of 100</small>
+            </div>
+            <div class="stat-card"><span>Scans analyzed</span><strong>0</strong><small>Your saved scan history</small>
+            </div>
+            <div class="stat-card"><span>Analysis method</span><strong>Local</strong><small>Transparent URL heuristics</small></div>
+          </div>
+          <div class="dashboard-grid">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Threat Trend</h2>
+                  <p>Flagged scans by day</p>
+                </div>
+              </div>
+              <div class="line-chart">
+                <div class="line-grid"><span></span><span></span><span></span><span></span><span></span></div><svg
+                viewBox="0 0 700 250" preserveAspectRatio="none"></svg>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Scan classifications</h2>
+                  <p>Your saved scan distribution</p>
+                </div>
+              </div>
+              <div class="horizontal-bars">
+                <div><span>Safe</span><b>0</b><i style="width:0%"></i></div>
+                <div><span>Phishing</span><b>0</b><i style="width:0%"></i></div>
+                <div><span>Malicious</span><b>0</b><i style="width:0%"></i></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- THREATS -->
+        <section class="page" id="page-threats">
+          <div class="page-heading">
+          <div><span class="eyebrow">URL RISK SIGNALS</span>
+              <h1>Threat Intelligence</h1>
+            <p>Local URL pattern checks only. No external reputation or threat feeds are connected.</p>
+          </div><span class="badge gray">External feeds not connected</span>
+          </div>
+          <div class="intel-grid">
+          <div class="panel intel-card"><span class="intel-icon">⌕</span><b>URL structure</b><strong
+              class="green-text">Checked</strong><small>Host, subdomains and URL length</small></div>
+          <div class="panel intel-card"><span class="intel-icon orange">!</span><b>Pattern indicators</b><strong
+              class="orange-text">Heuristic</strong><small>Warnings are not a threat-feed match</small></div>
+          <div class="panel intel-card"><span class="intel-icon">◈</span><b>Domain reputation</b><strong
+              class="orange-text">Unavailable</strong><small>No external reputation data is queried</small></div>
+          <div class="panel intel-card"><span class="intel-icon">⌁</span><b>Malware feeds</b><strong
+              class="orange-text">Unavailable</strong><small>No malware provider is connected</small></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Analysis sources</h2>
+                <p>What this installation does and does not check</p>
+              </div>
+            </div>
+            <div class="source-table">
+              <div class="source-row header"><span>Source</span><span>Status</span><span>Coverage</span><span>Notes</span></div>
+              <div class="source-row"><span>Local URL pattern checks</span><span>Available</span><span>URL structure</span><span>No network lookup</span></div>
+              <div class="source-row"><span>External threat feeds</span><span>Not connected</span><span>None</span><span>No feed results are implied</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HISTORY -->
+        <section class="page" id="page-history">
+          <div class="page-heading">
+            <div><span class="eyebrow">AUDIT TRAIL</span>
+              <h1>Scan History</h1>
+              <p>Review previously analyzed URLs.</p>
+            </div><button class="secondary-btn" id="clearHistory">Clear History</button>
+          </div>
+          <div class="panel">
+            <div class="toolbar"><input class="search" id="historySearch" placeholder="⌕ Search URLs..."><select
+                class="filter">
+                <option>All Results</option>
+                <option>Safe</option>
+                <option>Phishing</option>
+                <option>Malicious</option>
+              </select><select class="filter">
+                <option>All Time</option>
+                <option>Today</option>
+                <option>7 Days</option>
+                <option>30 Days</option>
+              </select></div>
+            <div class="table-wrap">
+              <table id="historyTable">
+                <thead>
+                  <tr>
+                    <th>URL</th>
+                    <th>Threat type</th>
+                    <th>Risk score</th>
+                    <th>Scanned</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="history-footer"><span id="historyCount">0 scans</span><button class="secondary-btn" id="loadMoreHistory" type="button">Load older scans</button></div>
+          </div>
+        </section>
+
+        <!-- BULK -->
+        <section class="page" id="page-bulk">
+          <div class="page-heading">
+            <div><span class="eyebrow">BATCH ANALYSIS</span>
+              <h1>Bulk URL Scanner</h1>
+              <p>Analyze hundreds of URLs in one operation.</p>
+            </div>
+          </div>
+          <div class="panel upload-panel">
+            <div class="upload-icon">⇧</div>
+            <h2>Upload URL Dataset</h2>
+            <p>Upload a CSV file containing one URL per row.</p><label class="upload-box"><input type="file"
+                id="csvFile" accept=".csv"><span>Choose CSV file</span><small>Maximum file size: 2 MB
+                · 500 URLs</small></label><button class="primary-btn" id="bulkDemo">Run Bulk Scan</button>
+          </div>
+          <div class="panel hidden" id="bulkResults">
+            <div class="panel-head">
+              <div>
+                <h2>Bulk Scan Results</h2>
+                <p>Analysis completed successfully.</p>
+              </div><button class="secondary-btn" id="downloadBulk">Download CSV</button>
+            </div>
+            <div class="bulk-stats"><span><b id="bulkTotal">0</b>Total</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>URL</th>
+                    <th>Threat type</th>
+                    <th>Risk score</th>
+                  </tr>
+                </thead>
+                <tbody id="bulkBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- REPORTS -->
+        <section class="page" id="page-reports">
+          <div class="page-heading">
+            <div><span class="eyebrow">SECURITY REPORTING</span>
+              <h1>Reports</h1>
+              <p>Create and download security analysis reports.</p>
+            </div><button class="primary-btn" id="generateReport">Generate Report</button>
+          </div>
+          <div class="report-grid">
+            <div class="panel report-card"><span>▤</span>
+              <h2>URL Security Report</h2>
+              <p>Summary and recent scan results from your saved history.</p><button
+                class="secondary-btn" data-report="url">Download PDF</button>
+            </div>
+            <div class="panel report-card"><span>▥</span>
+              <h2>Threat Summary</h2>
+              <p>Classification counts and recent flagged URLs from your history.</p><button
+                class="secondary-btn" data-report="threat">Download PDF</button>
+            </div>
+            <div class="panel report-card"><span>⌁</span>
+              <h2>Model Evaluation</h2>
+              <p>Documentation of the URL pattern checks. No trained-model metrics are claimed.</p><button class="secondary-btn"
+                data-page-target="model">View Model</button>
+            </div>
+          </div>
+          <div class="panel report-preview">
+            <div class="report-header">
+              <div class="brand">
+                <div class="brand-mark">P</div>
+                <div><strong>PhishGuard</strong><span>Security Report</span></div>
+              </div><span>Generated from your saved data</span>
+            </div>
+            <hr>
+            <h2>Security Scan Summary</h2>
+            <div class="report-metrics">
+              <div><span>Total Scans</span><b id="reportTotal">0</b></div>
+              <div><span>Flagged</span><b id="reportFlagged">0</b></div>
+              <div><span>Average Risk</span><b id="reportRisk">0</b></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYSIS METHOD -->
+        <section class="page" id="page-model">
+          <div class="page-heading">
+            <div><span class="eyebrow">TRANSPARENT URL CHECKS</span>
+              <h1>Analysis Method</h1>
+              <p>This application uses deterministic URL heuristics, not a trained machine-learning model.</p>
+            </div><span class="badge purple">Local analysis</span>
+          </div>
+          <div class="panel">
+            <h2>Signals evaluated</h2>
+            <p class="method-copy">The scanner checks the URL protocol, embedded credentials, IP-address hosts,
+              URL length, subdomain depth, hostname hyphens, and potentially deceptive URL terms.</p>
+            <h2>Risk bands</h2>
+            <div class="risk-scale">
+              <div><i class="safe-bg"></i><span>0–29</span><b>Safe</b></div>
+              <div><i class="medium-bg"></i><span>30–59</span><b>Phishing</b></div>
+              <div><i class="critical-bg"></i><span>60–100</span><b>Malicious</b></div>
+            </div>
+            <p class="method-copy">A low score is not a safety guarantee. This scanner does not fetch websites, query
+              threat feeds, or detect site content. Do not rely on it as the sole security control.</p>
+          </div>
+        </section>
+
+        <!-- ACCOUNT -->
+        <section class="page" id="page-users">
+          <div class="page-heading">
+            <div><span class="eyebrow">ACCOUNT</span>
+              <h1>Account settings</h1>
+              <p>Review and update your account details.</p>
+            </div><button class="primary-btn users-manage-btn">Edit account</button>
+          </div>
+          <div class="panel account-panel">
+            <div class="avatar account-avatar profile-emblem" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" focusable="false">
+                <path d="M12 3 19 6v5c0 4.7-2.8 8.2-7 10-4.2-1.8-7-5.3-7-10V6l7-3Z"></path>
+                <circle cx="12" cy="9" r="2.1"></circle>
+                <path d="M8.2 16c.7-1.8 2-2.7 3.8-2.7s3.1.9 3.8 2.7"></path>
+              </svg>
+            </div>
+            <div><h2 id="accountName">Your account</h2><p id="profileEmail">Sign in to view your account details.</p>
+              <p>Each account has private scan history and preferences.</p></div>
+            <button class="secondary-btn users-manage-btn">Edit profile</button>
+          </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="page" id="page-settings">
+          <div class="page-heading">
+            <div><span class="eyebrow">SYSTEM CONFIGURATION</span>
+              <h1>Settings</h1>
+              <p>Configure scanning and dashboard preferences.</p>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <div class="panel settings-panel">
+              <h2>Data preferences</h2>
+              <p>Choose whether completed URL scans are retained in your account.</p><label class="toggle-row"><span><b>Store scan history</b><small>Save scan results for reports, analytics and history.</small></span><input type="checkbox" checked><i></i></label>
+            </div>
+            <div class="panel settings-panel">
+              <h2>Notifications</h2>
+              <p>Choose which in-app scan alerts appear in the notifications panel.</p><label class="toggle-row"><span><b>High-risk scan alerts</b><small>Show scans with a risk score of 60 or higher.</small></span><input type="checkbox" checked><i></i></label>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><span>✓</span>
+    <div><b id="toastTitle">Success</b><small id="toastText">Action completed.</small></div>
+  </div>
+  <div class="modal hidden" id="modal">
+    <div class="modal-card"><button class="modal-close" id="modalClose">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+
+</html>

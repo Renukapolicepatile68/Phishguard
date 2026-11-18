@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Review suspicious URL patterns and make informed browsing decisions with PhishGuard.">
+    <meta name="theme-color" content="#080b12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="PhishGuard">
+
+    <title>PhishGuard - Login</title>
+
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/app-icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <!-- LEFT SIDE -->
+        <div class="auth-left">
+
+            <a class="logo" href="index.html">PhishGuard</a>
+
+            <p class="subtitle">
+                URL Pattern Analysis
+            </p>
+
+            <div class="welcome-text">
+                <span class="auth-kicker">Clear signals. Safer clicks.</span>
+                <h1>Know before<br>you click.</h1>
+
+                <p>
+                    Check suspicious links with transparent URL analysis
+                    and make more informed browsing decisions.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOGIN BOX -->
+        <div class="auth-box">
+
+            <h2>Welcome Back</h2>
+
+            <p class="description">
+                Login to your PhishGuard account
+            </p>
+
+
+            <form id="loginForm">
+
+                <label for="email">Email Address</label>
+
+                <input type="email" id="email" name="email" autocomplete="email" placeholder="Enter your email" required>
+
+
+                <label for="password">Password</label>
+
+                <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Enter your password" required>
+
+
+                <div class="remember">
+                    <a href="forgot-password.html">Forgot password?</a>
+                </div>
+
+                <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
+                <button type="submit">Sign in</button>
+              </form>
+
+
+            <p class="account-text">
+
+                Don't have an account?
+
+                <a href="signup.html">
+                    Sign Up
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/pwa.js"></script>
+</body>
+
+</html>
